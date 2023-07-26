@@ -1,11 +1,19 @@
 {% macro configure_interface(interface, interface_cfg=None, protocol=None, ports=None) -%}
+{# {% if interface_cfg.startswith('inet6') %} 
+freebsd_networking_ifconfig_{{ interface }}_ipv6:
+  sysrc.managed:
+    - name: ifconfig_{{ interface }}_ipv6
+{% else %} #}
 freebsd_networking_ifconfig_{{ interface }}:
   sysrc.managed:
     - name: ifconfig_{{ interface }}
+{# {% endif %} #}
     {% if interface.lower().startswith('lagg') and protocol is defined and ports is iterable -%}
     {# We are configuring a LAGG interface with ports and protocol defined #}
     {# example output: laggproto failover laggport igb0 laggport igb1 #}
     - value: "laggproto {{ protocol }} laggport {{ ports|join(' laggport ') }} up"
+    {% elif interface.lower().startswith('bridge') and ports is iterable -%}
+    - value: "addm {{ ports|join(' addm ') }} up"
     {% elif interface_cfg == None -%}
     {# Interface in pillar but without config, we assume it must be up #}
     - value: "up"
@@ -13,7 +21,7 @@ freebsd_networking_ifconfig_{{ interface }}:
     {# Interface in pillar with either dhcp or syncdhcp #}
     - value: "{{ interface_cfg|lower }}"
     {% else -%}
-    {# Interface in pillar with specific IP configured (We prefix it with "inet") #}
-    - value: "inet {{ interface_cfg }}"
+    {# Interface in pillar with specific IP configured #}
+    - value: "{{ interface_cfg }}"
     {% endif -%}
 {%- endmacro %}
