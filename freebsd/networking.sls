@@ -67,21 +67,13 @@ freebsd_networking_dns_config:
 {#---------- VLAN INTERFACES ----------#}
 {% if networking.vlan_interfaces is defined %}
 {% for parent in networking.vlan_interfaces %}
+{% set space = joiner(" ") %}
 
 freebsd_networking_vlans_{{parent}}:
   sysrc.managed:
     - name: vlans_{{parent}}
-    - value: "{%- for id in salt['pillar.get']('freebsd:networking:vlan_interfaces:' ~ parent) -%}{{ "%s_%s " | format(parent, id) }}{%- endfor -%}"
-    # - value: "{%- for id in salt['pillar.get']('freebsd:networking:vlan_interfaces:' ~ parent) -%}{{parent}}_{{id}}{%- if not loop.last -%} {%- endif -%}{%- endfor -%}"
+    - value: "{%- for id in salt['pillar.get']('freebsd:networking:vlan_interfaces:' ~ parent) -%}{{ space() }}{{ "%s" | format(id) }}{%- endfor -%}"
 
-{% for id in salt['pillar.get']('freebsd:networking:vlan_interfaces:' ~ parent) %}
-
-freebsd_networking_vlan_{{parent}}_{{id}}:
-  sysrc.managed:
-    - name: create_args_{{parent}}_{{id}}
-    - value: "vlan {{id}}"
-
-{% endfor %}
 {% endfor %}
 {% endif %}
 
