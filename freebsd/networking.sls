@@ -16,7 +16,8 @@ freebsd_networking_gateway:
 
 {% if networking.defaultrouter is defined and
       networking.defaultrouter | is_ip and
-      grains.get('virtual_subtype', '') != 'jail' %}
+      # grains.get('virtual_subtype', '') != 'jail' 
+      %}
 
 freebsd_networking_defaultrouter:
   sysrc.managed:
