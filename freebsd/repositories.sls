@@ -23,6 +23,12 @@
         enabled: {{ args.enabled }}
         mirror_type: {{ args.mirror_type }}
         priority: {{ args.priority }}
+{%- if signature_type is defined %}
+        signature_type: {{ args.signature_type }}
+{%- endif %}
+{%- if pubkey is defined %}
+        pubkey: {{ args.pubkey }}
+{%- endif %}
 
 {% endfor %}
 
