@@ -9,6 +9,9 @@ freebsd_kernel_{{ sysctl_name }}:
   sysctl.present:
     - name: {{ sysctl_name }}
     - value: {{ sysctl_value }}
+{%- if sysctl_name == "kern.randompid" %}
+    - onlyif: test `sysctl -n kern.randompid` -eq 0
+{%- endif %}
 
 {%- endfor %}
 
