@@ -24,8 +24,7 @@ freebsd_networking_defaultrouter:
 
 {% endif %} {# if networking.defaultrouter is defined #}
 
-{% if networking.ipv6_defaultrouter is defined and
-      networking.ipv6_defaultrouter | is_ipv6 %}
+{% if networking.ipv6_defaultrouter is defined %}
 
 freebsd_networking_ipv6_defaultrouter:
   sysrc.managed:
