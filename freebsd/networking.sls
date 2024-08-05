@@ -15,7 +15,7 @@ freebsd_networking_gateway:
 {% endif %} {# if networking.gateway is defined #}
 
 {% if networking.defaultrouter is defined and
-      networking.defaultrouter | is_ip %}
+      networking.defaultrouter | is_ipv4 %}
 
 freebsd_networking_defaultrouter:
   sysrc.managed:
@@ -23,6 +23,16 @@ freebsd_networking_defaultrouter:
     - value: "{{ networking.defaultrouter }}"
 
 {% endif %} {# if networking.defaultrouter is defined #}
+
+{% if networking.ipv6_defaultrouter is defined and
+      networking.ipv6_defaultrouter | is_ipv6 %}
+
+freebsd_networking_ipv6_defaultrouter:
+  sysrc.managed:
+    - name: ipv6_defaultrouter
+    - value: "{{ networking.ipv6_defaultrouter }}"
+
+{% endif %} {# if networking.ipv6_defaultrouter is defined #}
 
 {% if networking.dns is defined %}
 resolvconf_config:
