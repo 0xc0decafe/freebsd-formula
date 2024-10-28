@@ -110,6 +110,13 @@ freebsd_networking_cloned_interfaces:
 {% endfor %} {# for alias in interface_cfg.aliases #}
 {% endif %} {# if interface_cfg.aliases is defined #}
 
+{% if interface_cfg.name is defined %}
+freebsd_networking_ifconfig_{{ interface }}_name:
+  sysrc.managed:
+    - name: ifconfig_{{ interface }}_name
+    - value: {{ interface_cfg.name }}
+{% endif %} {# if interface_cfg.name is defined #}
+
 {% endfor %} {# for interface in networking.interfaces.cloned_interfaces #}
 {% endif %} {# if networking.interfaces.cloned_interfaces is defined #}
 
